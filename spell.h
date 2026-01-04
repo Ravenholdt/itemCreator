@@ -40,8 +40,12 @@ inline int populateSpellList()
     // 2
     // 3
     spellList["Arcane Sight"] = {"Arcane Sight", 3, DURATION_minute_one, 0};
+    
 
     // 4
 
+    // 5
+    spellList["Teleport"] = {"Teleport", 3, DURATION_NONE, 0};
+    
     return spellList.size();
 }

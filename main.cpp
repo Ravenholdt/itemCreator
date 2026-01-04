@@ -9,6 +9,7 @@
 
 #include "spell.h"
 #include "effect.h"
+#include "staff.h"
 
 #define LEVEL_CHARACTER 7
 #define LEVEL_MYTHIC 2
@@ -34,6 +35,7 @@ struct itemS
 {
     int level;
     std::vector<effectS> effects;
+    staffS staff;
 };
 
 int calculateValue(itemS item)
@@ -86,12 +88,16 @@ int main()
     std::cout << "Spells in spell list: " << populateSpellList() << std::endl << std::endl;
     test("Detect Magic");
 
-    itemS staff = {LEVEL_MYTHIC};
+    itemS staffOfMorric = {LEVEL_MYTHIC};
 
-    staff.effects.push_back({"Lesser Maximize", {0, 14000}});
-    staff.effects.push_back(spellTrigger(spellList["Shield"], CASTERLEVEL_MIN, true));
+    staffOfMorric.effects.push_back({"Lesser Maximize", {0, 14000}});
+    staffOfMorric.effects.push_back(spellTrigger(spellList["Shield"], CASTERLEVEL_MIN, true));
 
-    int value = calculateValue(staff);
+    staffOfMorric.staff.spells.push_back(staffSpell("Shield", 1));
+    staffOfMorric.staff.spells.push_back(staffSpell("Arcane Sight", 1));
+    staffOfMorric.staff.spells.push_back(staffSpell("Teleport", 1));
+
+    int value = calculateValue(staffOfMorric);
     if (value >= 0)
     {
         printf("Valid Item!\n");
