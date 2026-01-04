@@ -8,17 +8,12 @@
 #include <vector>
 
 #include "spell.h"
+#include "effect.h"
 
 #define LEVEL_CHARACTER 7
 #define LEVEL_MYTHIC 2
 
 #define CASTERLEVEL_MAX LEVEL_CHARACTER
-
-struct itemValueS
-{
-    int bonus;
-    int gold;
-};
 
 itemValueS itemValueMax[11] = 
 {
@@ -33,12 +28,6 @@ itemValueS itemValueMax[11] =
     12, 288000,
     13, 338000,
     15, 450000,
-};
-
-struct effectS
-{
-    std::string name;
-    itemValueS value;
 };
 
 struct itemS
@@ -95,7 +84,7 @@ void test(std::string spell)
 int main()
 {
     std::cout << "Spells in spell list: " << populateSpellList() << std::endl << std::endl;
-    test("Detect Poison");
+    test("Detect Magic");
 
     itemS staff = {LEVEL_MYTHIC};
 
