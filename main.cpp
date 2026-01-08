@@ -11,8 +11,8 @@
 #include "effect.h"
 #include "staff.h"
 
-#define LEVEL_CHARACTER 7
-#define LEVEL_MYTHIC 2
+#define LEVEL_CHARACTER 8
+#define LEVEL_MYTHIC 3
 
 #define CASTERLEVEL_MAX LEVEL_CHARACTER
 
@@ -34,33 +34,43 @@ itemValueS itemValueMax[11] =
 struct itemS
 {
     int level;
-    std::vector<effectS> effects;
+    std::vector<effectS> effects = {};
     staffS staff;
+
+    int calculateValue();
+    void spellTrigger(std::string spellName, int casterLevel, bool continious = false, int charges = CHARGES_UNLIMITED);
 };
 
-int calculateValue(itemS item)
+int itemS::calculateValue()
 {
     itemValueS itemValue = {0, 0};
-    for(const effectS& effect : item.effects) 
+    for(const effectS& effect : effects) 
     {
         itemValue.bonus += effect.value.bonus;
         itemValue.gold += effect.value.gold;
         std::cout << "Adding " << effect.name << " to item. (" << effect.value.gold << ")" << std::endl;
     }
 
+    itemValue.gold += staff.calculateValue();
+
+    std::cout << "Item price: " << itemValue.gold << std::endl;
+    std::cout << "Value left: " << itemValueMax[level].gold - itemValue.gold << std::endl;
+
     if (itemValue.bonus > itemValueMax->bonus &&
         itemValue.gold > itemValueMax->gold)
     {
         return -1;
     }
-
-    std::cout << "Item price: " << itemValue.gold << std::endl;
-    std::cout << "Value left: " << itemValueMax[item.level].gold - itemValue.gold << std::endl;
     return itemValue.gold;
 }
 
-effectS spellTrigger(spellS spell, int casterLevel, bool continious = false, int charges = 5)
+
+
+void itemS::spellTrigger(std::string spellName, int casterLevel, bool continious, int charges)
 {
+    int componentCostModifier = charges == CHARGES_UNLIMITED ? 100 : 50;
+    if (charges == CHARGES_UNLIMITED) { charges = 5; }
+    spellS spell = spellList[spellName];
     float levelMod = spell.spellLevel == 0 ? 0.5 : spell.spellLevel;
     if (casterLevel == 0) casterLevel = spell.spellLevel * 2 - 1;
     if (casterLevel < 1) casterLevel = 1; // Caster level should never be below 1.
@@ -71,33 +81,53 @@ effectS spellTrigger(spellS spell, int casterLevel, bool continious = false, int
     effectS effect;
     effect.name = spell.name;
     if (continious) { effect.name.append(", Continious"); }
-    effect.value.gold = (levelMod * casterLevel * 2000) * (5 / charges) * (continious ? spell.duration : 1);
-    return effect;
+    effect.value.gold = ((levelMod * casterLevel * 2000) / (5 / charges)) * (continious ? spell.duration : 1)
+                         + (spell.castingCost *componentCostModifier);
+    effects.push_back(effect);
 }
 
 void test(std::string spell)
 {
     std::cout << "TEST" << std::endl;
-    int value = spellTrigger(spellList[spell], CASTERLEVEL_MIN, false).value.gold;
+    itemS item = {10};
+    item.spellTrigger(spell, CASTERLEVEL_MIN, false);
+    int value = item.calculateValue();
     std::cout << "Test value: " << value << std::endl;
     std::cout << "END TEST" << std::endl << "---------------------------" << std::endl;
+}
+
+void staffTest()
+{
+    std::cout << "TEST - STAFF" << std::endl;
+    itemS item = {10};
+    item.staff.staffSpell("Dispel Magic", 2);
+    item.staff.staffSpell("Arcane Sight");
+
+    int value = item.staff.calculateValue();
+
+    std::cout << "Test value: " << value << std::endl;
+    std::cout << "END TEST - STAFF" << std::endl << "---------------------------" << std::endl;
 }
 
 int main()
 {
     std::cout << "Spells in spell list: " << populateSpellList() << std::endl << std::endl;
-    test("Detect Magic");
+//    test("Dispel Magic");
+//    staffTest();
 
     itemS staffOfMorric = {LEVEL_MYTHIC};
 
     staffOfMorric.effects.push_back({"Lesser Maximize", {0, 14000}});
-    staffOfMorric.effects.push_back(spellTrigger(spellList["Shield"], CASTERLEVEL_MIN, true));
 
-    staffOfMorric.staff.spells.push_back(staffSpell("Shield", 1));
-    staffOfMorric.staff.spells.push_back(staffSpell("Arcane Sight", 1));
-    staffOfMorric.staff.spells.push_back(staffSpell("Teleport", 1));
+    staffOfMorric.spellTrigger("Shield", CASTERLEVEL_MIN, true);
+//    staffOfMorric.spellTrigger("Protection from Evil, Communal", CASTERLEVEL_MIN, false, 2);
 
-    int value = calculateValue(staffOfMorric);
+    staffOfMorric.staff.staffSpell("Dispel Magic", 2);
+//    staffOfMorric.staff.staffSpell("Scrying", 4);
+//    staffOfMorric.staff.staffSpell("Protection from Evil, Communal", 1);
+//    staffOfMorric.staff.staffSpell("Snowball", 1);
+
+    int value = staffOfMorric.calculateValue();
     if (value >= 0)
     {
         printf("Valid Item!\n");

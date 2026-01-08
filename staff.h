@@ -1,7 +1,9 @@
 #pragma once
 
 #include <algorithm>
+#include <ostream>
 #include <vector>
+#include <iostream>
 
 #include "effect.h"
 #include "spell.h"
@@ -10,37 +12,51 @@ struct staffS
 {
     int value = 0;
     int casterLevel = 8;
-    std::vector<spellS> spells;
+    std::vector<spellS> spells = {};
+
+    int calculateValue();
+    void staffSpell(std::string name, int charges = 1);
 };
 
-inline spellS staffSpell(std::string name, int charges)
+inline void staffS::staffSpell(std::string name, int charges)
 {
-    return spellList[name];
+    spellS spell = spellList[name];
+    spell.charges = charges;
+    spells.push_back(spell);
 }
 
-inline int staveCalculateValue(staffS *staff)
+inline int staffS::calculateValue()
 {
-    std::sort(staff->spells.begin(), staff->spells.end(), sortSpells);
+    if (spells.empty()) { return 0; }
+    std::sort(spells.begin(), spells.end(), sortSpells);
 
-    int casterLevel = staff->spells[0].spellLevel * 2 - 1;
-    staff->casterLevel = staff->casterLevel < casterLevel ? casterLevel : 8;
+    int spellCasterLevel = spells[0].spellLevel * 2 - 1;
+    if (casterLevel < spellCasterLevel) { casterLevel = spellCasterLevel; }
 
-    int priceMod = 800;
-    for (int i = 0 ; i < staff->spells.size() ; i++)
+    int i = 0;
+    for (const spellS& spell : spells) 
     {
+        int priceMod = 800;
         switch (i) {
             case 0:
                 priceMod = priceMod;
-                continue;
+                break;
             case 1:
                 priceMod = priceMod * 0.75;
-                continue;
+                break;
             default:
                 priceMod = priceMod * 0.50;
         }
 
-        staff->value += staff->spells[i].spellLevel * casterLevel * priceMod;
+        int spellValue = (spell.spellLevel * casterLevel * priceMod) / spell.charges + (spell.castingCost * 50);
+        std::cout << "Staff-print: " << spells[i].name 
+                  << ", CL: " << casterLevel 
+                  << ", Charges: " << spells[i].charges
+                  << ", (" << spellValue  
+                  << ", " << priceMod << ")" << std::endl;
+        value += spellValue;
+        i++;
     }
-
-    return 0;
+    std::cout << "Staff value: " << value << std::endl;
+    return value;
 }
