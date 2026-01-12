@@ -11,7 +11,7 @@
 #include "effect.h"
 #include "staff.h"
 
-#define LEVEL_CHARACTER 8
+#define LEVEL_CHARACTER 9
 #define LEVEL_MYTHIC 3
 
 #define CASTERLEVEL_MAX LEVEL_CHARACTER
@@ -56,8 +56,8 @@ int itemS::calculateValue()
     std::cout << "Item price: " << itemValue.gold << std::endl;
     std::cout << "Value left: " << itemValueMax[level].gold - itemValue.gold << std::endl;
 
-    if (itemValue.bonus > itemValueMax->bonus &&
-        itemValue.gold > itemValueMax->gold)
+    if (itemValue.bonus > itemValueMax[level].bonus ||
+        itemValue.gold > itemValueMax[level].gold)
     {
         return -1;
     }
@@ -120,18 +120,17 @@ int main()
     staffOfMorric.effects.push_back({"Lesser Maximize", {0, 14000}});
 
     staffOfMorric.spellTrigger("Shield", CASTERLEVEL_MIN, true);
-//    staffOfMorric.spellTrigger("Protection from Evil, Communal", CASTERLEVEL_MIN, false, 2);
 
+    staffOfMorric.staff.casterLevel = LEVEL_CHARACTER;
     staffOfMorric.staff.staffSpell("Dispel Magic", 2);
 //    staffOfMorric.staff.staffSpell("Scrying", 4);
-//    staffOfMorric.staff.staffSpell("Protection from Evil, Communal", 1);
 //    staffOfMorric.staff.staffSpell("Snowball", 1);
 
     int value = staffOfMorric.calculateValue();
     if (value >= 0)
     {
-        printf("Valid Item!\n");
+        std::cout << "Valid Item! (" << value <<")" << std::endl;
     } else {
-        printf("Invalid item\n");
+        std::cout << "Invalid Item! (" << value <<")" << std::endl;
     }
 }

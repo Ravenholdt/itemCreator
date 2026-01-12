@@ -4,8 +4,8 @@
 
 struct itemValueS
 {
-    int bonus;
-    int gold;
+    int bonus = 0;
+    int gold = 0;
 };
 
 struct effectS
