@@ -118,10 +118,11 @@ int main()
     itemS staffOfMorric = {LEVEL_MYTHIC};
 
     staffOfMorric.effects.push_back({"Lesser Maximize", {0, 14000}});
+//    staffOfMorric.effects.push_back({"Empower", {0, 32500}});
+//    staffOfMorric.effects.push_back({"Maximize", {0, 54000}});
 
     staffOfMorric.spellTrigger("Shield", CASTERLEVEL_MIN, true);
 
-    staffOfMorric.staff.casterLevel = LEVEL_CHARACTER;
     staffOfMorric.staff.staffSpell("Dispel Magic", 2);
 //    staffOfMorric.staff.staffSpell("Scrying", 4);
 //    staffOfMorric.staff.staffSpell("Snowball", 1);
