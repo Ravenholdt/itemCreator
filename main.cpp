@@ -11,8 +11,8 @@
 #include "effect.h"
 #include "staff.h"
 
-#define LEVEL_CHARACTER 9
-#define LEVEL_MYTHIC 3
+#define LEVEL_CHARACTER 12
+#define LEVEL_MYTHIC 4
 
 #define CASTERLEVEL_MAX LEVEL_CHARACTER
 
@@ -124,6 +124,11 @@ int main()
     staffOfMorric.spellTrigger("Shield", CASTERLEVEL_MIN, true);
 
     staffOfMorric.staff.staffSpell("Dispel Magic", 2);
+    staffOfMorric.staff.staffSpell("Summon Monster VI", 2);
+    staffOfMorric.staff.staffSpell("Magic Missile", 1);
+    staffOfMorric.staff.staffSpell("Dimension Door", 2);
+//    staffOfMorric.staff.staffSpell("See Invisibility", 1);
+//    staffOfMorric.staff.staffSpell("Fireball", 1);
 //    staffOfMorric.staff.staffSpell("Scrying", 4);
 //    staffOfMorric.staff.staffSpell("Snowball", 1);
 
