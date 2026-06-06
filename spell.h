@@ -54,7 +54,7 @@ inline int populateSpellList()
     spellList["Dispel Magic"] = {"Dispel Magic", 3, DURATION_NONE, 0};
     spellList["Fireball"] = {"Fireball", 3, DURATION_NONE, 0};
     spellList["Summon Monster III"] = {"Summon Monster III", 3, DURATION_round, 0};
-    
+    spellList["Spellsword"] = {"Spellsword", 3, DURATION_minute_ten, 0};
 
     // 4
     spellList["Dimension Door"] = {"Dimension Door", 4, DURATION_NONE, 0};
@@ -70,5 +70,7 @@ inline int populateSpellList()
     spellList["Dispel Magic, Greater"] = {"Dispel Magic, Greater", 6, DURATION_NONE, 0};
     spellList["Summon Monster VI"] = {"Summon Monster VI", 6, DURATION_round, 0};
 
+    //
+    spellList["Summon Monster VII"] = {"Summon Monster VII", 7, DURATION_round, 0};
     return spellList.size();
 }

@@ -11,8 +11,8 @@
 #include "effect.h"
 #include "staff.h"
 
-#define LEVEL_CHARACTER 12
-#define LEVEL_MYTHIC 4
+#define LEVEL_CHARACTER 14
+#define LEVEL_MYTHIC 5
 
 #define CASTERLEVEL_MAX LEVEL_CHARACTER
 
@@ -118,13 +118,15 @@ int main()
     itemS staffOfMorric = {LEVEL_MYTHIC};
 
     staffOfMorric.effects.push_back({"Lesser Maximize", {0, 14000}});
+//    staffOfMorric.effects.push_back({"Lesser Quicken", {0, 35000}});
 //    staffOfMorric.effects.push_back({"Empower", {0, 32500}});
 //    staffOfMorric.effects.push_back({"Maximize", {0, 54000}});
 
     staffOfMorric.spellTrigger("Shield", CASTERLEVEL_MIN, true);
+//    staffOfMorric.spellTrigger("Spellsword", CASTERLEVEL_MIN, true);
 
-    staffOfMorric.staff.staffSpell("Dispel Magic", 2);
-    staffOfMorric.staff.staffSpell("Summon Monster VI", 2);
+    staffOfMorric.staff.staffSpell("Dispel Magic, Greater", 2);
+    staffOfMorric.staff.staffSpell("Summon Monster VII", 2);
     staffOfMorric.staff.staffSpell("Magic Missile", 1);
     staffOfMorric.staff.staffSpell("Dimension Door", 2);
 //    staffOfMorric.staff.staffSpell("See Invisibility", 1);
